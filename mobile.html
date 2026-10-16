@@ -213,6 +213,12 @@ kbd{background:#1b1d24;border:1px solid #343843;border-radius:3px;padding:0 5px;
   position:absolute;top:max(10px, env(safe-area-inset-top));right:max(14px, env(safe-area-inset-right));
   display:flex;gap:7px;align-items:center;z-index:29;pointer-events:none;
 }
+/* Touch controls gizlendiğinde toggle butonu görünür kalsın */
+.touch-controls.hidden #touchTopBar {
+  display:flex !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
 .tbtn-icon{
   width:38px;height:38px;border-radius:8px;font-size:16px;border-color:var(--border);
   background:rgba(17,18,22,.85);
@@ -247,19 +253,20 @@ kbd{background:#1b1d24;border:1px solid #343843;border-radius:3px;padding:0 5px;
 .jdir{position:absolute;color:rgba(180,185,195,.3);font-size:10px;pointer-events:none}
 .jdir.up{top:6px}.jdir.right{right:6px}.jdir.down{bottom:6px}.jdir.left{left:6px}
 
-/* Koşma (Sprint) Butonu */
+/* Koşma (Sprint) Butonu - Alt ortada utility bar ile */
 .tbtn-sprint{
-  position:absolute;left:146px;bottom:106px;width:50px;height:50px;border-color:rgba(94,204,116,.5);
+  position:fixed;left:50%;bottom:14px;transform:translateX(160px);width:50px;height:50px;z-index:30;border-color:rgba(94,204,116,.5);
 }
 .tbtn-sprint.active{
   border-color:var(--green);background:radial-gradient(circle, #1a4425 0%, #0d2213 100%);
   box-shadow:0 0 16px rgba(94,204,116,.65);
 }
 
-/* Sağ Hızlı Destek Araçları (Fener, Can, Enerji, Silah) */
+/* Sağ Hızlı Destek Araçları (Fener, Can, Enerji, Silah) - Alt ortaya taşındı */
 #touchUtilityBar{
-  position:absolute;right:max(14px, env(safe-area-inset-right));bottom:230px;
-  display:flex;flex-direction:row;gap:8px;pointer-events:none;
+  position:fixed;left:50%;bottom:80px;
+  transform:translateX(-50%);
+  display:flex;flex-direction:row;gap:8px;pointer-events:none;z-index:30;
 }
 .tbtn-util{
   width:44px;height:44px;font-size:14px;border-color:var(--border);background:rgba(18,20,26,.88);
@@ -279,7 +286,7 @@ kbd{background:#1b1d24;border:1px solid #343843;border-radius:3px;padding:0 5px;
 /* Sağ Aksiyon Grubu & Nişan-Ateş Joystick'i (Brawl Stars Stili) */
 #touchActionZone{
   position:absolute;right:max(12px, env(safe-area-inset-right));bottom:max(14px, env(safe-area-inset-bottom));
-  width:230px;height:220px;pointer-events:none;
+  width:250px;height:240px;pointer-events:none;
 }
 #virtualAimJoystick{
   position:absolute;right:10px;bottom:10px;width:140px;height:140px;pointer-events:auto;
@@ -321,19 +328,20 @@ kbd{background:#1b1d24;border:1px solid #343843;border-radius:3px;padding:0 5px;
   position:absolute;inset:5px;border:1.5px solid rgba(255,255,255,.3);border-radius:50%;pointer-events:none;
 }
 
-/* Çevreleyen Aksiyon Butonları */
+/* Çevreleyen Aksiyon Butonları - Ekranın alt ortasında yatay sıra */
 .tbtn-action{
-  position:absolute;width:48px;height:48px;
+  position:fixed;width:48px;height:48px;z-index:30;
 }
-#touchReloadBtn{right:156px;bottom:14px}
-#touchMeleeBtn{right:156px;bottom:76px;border-color:rgba(180,80,60,.5)}
-#touchInteractBtn{right:86px;bottom:156px;border-color:rgba(232,178,58,.5)}
+/* Alt orta buton sırası - soldan sağa */
+#touchReloadBtn{left:50%;bottom:14px;transform:translateX(-220px)}
+#touchMeleeBtn{left:50%;bottom:14px;transform:translateX(-160px);border-color:rgba(180,80,60,.5)}
+#touchInteractBtn{left:50%;bottom:14px;transform:translateX(-100px);border-color:rgba(232,178,58,.5)}
 #touchInteractBtn.ready{
   border-color:var(--amber);background:radial-gradient(circle, #523a0f 0%, #261904 100%);
   box-shadow:0 0 20px rgba(232,178,58,.8);animation:tPulseAmber .7s infinite alternate;color:#fff;
 }
-#touchGrenadeBtn{right:18px;bottom:156px;width:44px;height:44px;border-color:rgba(200,100,40,.5)}
-#touchBarricadeBtn{right:156px;bottom:138px;width:44px;height:44px;border-color:rgba(90,169,230,.5)}
+#touchGrenadeBtn{left:50%;bottom:14px;transform:translateX(220px);width:44px;height:44px;border-color:rgba(200,100,40,.5)}
+#touchBarricadeBtn{left:50%;bottom:14px;transform:translateX(280px);width:44px;height:44px;border-color:rgba(90,169,230,.5)}
 #touchReloadBtn.empty{
   border-color:var(--amber);animation:tPulseAmber .7s infinite alternate;
 }
@@ -437,10 +445,6 @@ kbd{background:#1b1d24;border:1px solid #343843;border-radius:3px;padding:0 5px;
         <div id="joystickThumb"></div>
       </div>
     </div>
-    <button type="button" class="tbtn tbtn-sprint" id="touchSprintBtn" aria-label="Koş">
-      <span class="ticon">🏃</span>
-      <span class="tlbl">KOŞ</span>
-    </button>
   </div>
 
   <!-- Sağ Hızlı Destek Araçları (Fener, Can, Enerji, Silah) -->
@@ -500,6 +504,12 @@ kbd{background:#1b1d24;border:1px solid #343843;border-radius:3px;padding:0 5px;
     <button type="button" class="tbtn tbtn-action" id="touchBarricadeBtn" aria-label="Barikat Kur" title="Barikat Kur (B)">
       <span class="ticon">🛡️</span>
       <span class="tlbl">BARİKAT</span>
+    </button>
+    
+    <!-- Sprint Butonu -->
+    <button type="button" class="tbtn tbtn-sprint" id="touchSprintBtn" aria-label="Koş">
+      <span class="ticon">🏃</span>
+      <span class="tlbl">KOŞ</span>
     </button>
   </div>
 </div>
@@ -2736,7 +2746,7 @@ class Player {
           if (z.dead) continue;
           const d = dist(z.x, z.y, this.x, this.y);
           if (d < bestD) {
-            if (!game.map.raycastCollide(this.x, this.y, z.x, z.y)) {
+            if (game.map.lineOfSight(this.x, this.y, z.x, z.y)) {
               bestD = d;
               bestZ = z;
             }
@@ -4429,7 +4439,10 @@ class Game {
     if (p && !p.dead) {
       const w = p.weapon;
       const isAuto = w ? (WEAPONS[w.id].auto || WEAPONS[w.id].cls === 'melee') : false;
+      const isMobileAim = Input.touchAim && Input.touchAim.active;  // mobil joystick aktif mi?
       if (Input.mouse.down) {
+        // Mobilde joystick sürüklenirken sürekli ateş et (semiLatch'i resetle)
+        if (isMobileAim) p.semiLatch = false;
         if (isAuto || !p.semiLatch) { p.tryShoot(this); if (!isAuto) p.semiLatch = true; }
       } else p.semiLatch = false;
     }
@@ -6107,6 +6120,12 @@ class TouchController {
     const inGame = this.game.state === 'playing' && !this.game.ui.modalOpen;
     const show = allowed && !this.userHidden && inGame;
     this.dom.touchControls.classList.toggle('hidden', !show);
+    
+    // Toggle butonu HER ZAMAN görünür olsun
+    if (this.dom.touchToggleBtn && allowed && inGame) {
+      this.dom.touchToggleBtn.style.display = '';
+    }
+    
     if (!show) this.reset();
   }
   toggleUserVisibility() {
@@ -6382,8 +6401,8 @@ class TouchController {
         e.preventDefault(); e.stopPropagation();
         swapBtn.classList.add('pressed');
         const p = this.game.player;
-        if (p && p.weapons.length > 1) {
-          const next = (p.weaponIdx + 1) % p.weapons.length;
+        if (p && p.inv.weapons.length > 1) {
+          const next = (p.weaponIdx + 1) % p.inv.weapons.length;
           p.swapWeapon(this.game, next);
         } else {
           Input.triggerAction('lastWeapon');
