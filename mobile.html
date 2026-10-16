@@ -6298,7 +6298,7 @@ class TouchController {
         if (!z || z.dead) continue;
         const d = dist(z.x, z.y, p.x, p.y);
         if (d < bestD) {
-          if (!this.game.map || !this.game.map.raycastCollide(p.x, p.y, z.x, z.y)) {
+          if (!this.game.map || this.game.map.lineOfSight(p.x, p.y, z.x, z.y)) {
             bestD = d; bestZ = z;
           }
         }
