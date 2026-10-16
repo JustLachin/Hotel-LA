@@ -179,6 +179,204 @@ kbd{background:#1b1d24;border:1px solid #343843;border-radius:3px;padding:0 5px;
 ::-webkit-scrollbar-track{background:#0c0d11}
 ::-webkit-scrollbar-thumb{background:#2c2f38;border-radius:5px}
 ::-webkit-scrollbar-thumb:hover{background:#3d414d}
+
+/* ================= MOBİL DOKUNMATİK KONTROL SİSTEMİ ================= */
+#touchControls{
+  position:fixed;inset:0;pointer-events:none;z-index:28;touch-action:none;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  padding:env(safe-area-inset-top, 8px) env(safe-area-inset-right, 12px) env(safe-area-inset-bottom, 12px) env(safe-area-inset-left, 12px);
+  transition:opacity .18s ease;
+}
+#touchControls.hidden{display:none !important}
+#touchControls *{touch-action:none}
+
+/* Buton Taban Stilleri */
+.tbtn{
+  pointer-events:auto;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 40% 35%, rgba(32,36,46,.82), rgba(14,16,21,.92) 80%);
+  border:1.5px solid rgba(200,38,43,.45);border-radius:50%;color:var(--text);cursor:pointer;
+  box-shadow:0 6px 18px rgba(0,0,0,.6), inset 0 1px 1px rgba(255,255,255,.1);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  transition:transform .08s ease, border-color .12s, box-shadow .12s, background .12s;
+  will-change:transform;
+}
+.tbtn:active, .tbtn.pressed{
+  transform:scale(0.92);border-color:var(--red2);
+  box-shadow:0 0 16px rgba(255,77,77,.7), inset 0 0 8px rgba(255,77,77,.35);
+  background:radial-gradient(circle at 40% 35%, rgba(60,18,22,.92), rgba(24,8,10,.95) 80%);
+}
+.tbtn .ticon{font-size:18px;line-height:1;pointer-events:none;filter:drop-shadow(0 1px 2px #000)}
+.tbtn .tlbl{font-size:9.5px;font-weight:700;letter-spacing:.4px;color:#c0c2cc;margin-top:2px;pointer-events:none;text-transform:uppercase}
+
+/* Üst Kısayol Barı */
+#touchTopBar{
+  position:absolute;top:max(10px, env(safe-area-inset-top));right:max(14px, env(safe-area-inset-right));
+  display:flex;gap:7px;align-items:center;z-index:29;pointer-events:none;
+}
+.tbtn-icon{
+  width:38px;height:38px;border-radius:8px;font-size:16px;border-color:var(--border);
+  background:rgba(17,18,22,.85);
+}
+
+/* Sol Hareket Bölgesi & Joystick */
+#touchMoveZone{
+  position:absolute;left:max(12px, env(safe-area-inset-left));bottom:max(14px, env(safe-area-inset-bottom));
+  width:200px;height:200px;pointer-events:auto;
+}
+#virtualJoystick{
+  position:absolute;left:10px;bottom:10px;width:140px;height:140px;
+}
+#joystickBase{
+  position:relative;width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(circle, rgba(23,25,32,.65) 0%, rgba(10,11,15,.85) 75%, rgba(200,38,43,.15) 100%);
+  border:2px solid rgba(200,38,43,.45);
+  box-shadow:0 8px 24px rgba(0,0,0,.65), inset 0 0 20px rgba(0,0,0,.8);
+  display:flex;align-items:center;justify-content:center;
+}
+#joystickBase::after{
+  content:'';position:absolute;inset:28px;border-radius:50%;border:1px dashed rgba(200,38,43,.25);
+  pointer-events:none;
+}
+#joystickThumb{
+  position:absolute;width:56px;height:56px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #4a1518 0%, #1c1f27 65%, #101217 100%);
+  border:2px solid var(--red2);
+  box-shadow:0 4px 12px rgba(0,0,0,.7), 0 0 10px rgba(255,77,77,.35), inset 0 1px 1px rgba(255,255,255,.2);
+  pointer-events:none;transition:transform .04s ease-out;will-change:transform;
+}
+.jdir{position:absolute;color:rgba(180,185,195,.3);font-size:10px;pointer-events:none}
+.jdir.up{top:6px}.jdir.right{right:6px}.jdir.down{bottom:6px}.jdir.left{left:6px}
+
+/* Koşma (Sprint) Butonu - Alt ortada utility bar ile */
+.tbtn-sprint{
+  position:fixed;left:50%;bottom:14px;transform:translateX(160px);width:50px;height:50px;z-index:30;border-color:rgba(94,204,116,.5);
+}
+.tbtn-sprint.active{
+  border-color:var(--green);background:radial-gradient(circle, #1a4425 0%, #0d2213 100%);
+  box-shadow:0 0 16px rgba(94,204,116,.65);
+}
+
+/* Sağ Hızlı Destek Araçları (Fener, Can, Enerji, Silah) - Alt ortaya taşındı */
+#touchUtilityBar{
+  position:fixed;left:50%;bottom:80px;
+  transform:translateX(-50%);
+  display:flex;flex-direction:row;gap:8px;pointer-events:none;z-index:30;
+}
+.tbtn-util{
+  width:44px;height:44px;font-size:14px;border-color:var(--border);background:rgba(18,20,26,.88);
+}
+.tbtn-util .tlbl{font-size:8px;margin-top:1px}
+#touchFlashlightBtn.on{
+  border-color:var(--amber);background:radial-gradient(circle, #44320e 0%, #1e1606 100%);
+  box-shadow:0 0 14px rgba(232,178,58,.65);color:#ffe393;
+}
+#touchHealBtn.urgent{
+  border-color:var(--red2);animation:tPulseBad .6s infinite alternate;
+}
+#touchEnergyBtn.urgent{
+  border-color:var(--green);animation:tPulseGood .8s infinite alternate;
+}
+
+/* Sağ Aksiyon Grubu & Nişan-Ateş Joystick'i (Brawl Stars Stili) */
+#touchActionZone{
+  position:absolute;right:max(12px, env(safe-area-inset-right));bottom:max(14px, env(safe-area-inset-bottom));
+  width:250px;height:240px;pointer-events:none;
+}
+#virtualAimJoystick{
+  position:absolute;right:10px;bottom:10px;width:140px;height:140px;pointer-events:auto;
+}
+#aimJoystickBase{
+  position:relative;width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(circle, rgba(45,15,18,.7) 0%, rgba(18,8,10,.88) 75%, rgba(255,77,77,.22) 100%);
+  border:2px solid rgba(255,77,77,.55);
+  box-shadow:0 8px 24px rgba(0,0,0,.7), inset 0 0 22px rgba(200,38,43,.3);
+  display:flex;align-items:center;justify-content:center;
+}
+#aimJoystickBase::after{
+  content:'';position:absolute;inset:26px;border-radius:50%;border:1px dashed rgba(255,77,77,.3);
+  pointer-events:none;
+}
+#aimJoystickThumb{
+  position:absolute;width:64px;height:64px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #a82025 0%, #4a1014 65%, #180507 100%);
+  border:2.5px solid var(--red2);
+  box-shadow:0 4px 14px rgba(0,0,0,.75), 0 0 16px rgba(255,77,77,.5), inset 0 2px 2px rgba(255,255,255,.3);
+  pointer-events:none;transition:transform .03s ease-out;will-change:transform;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+#aimJoystickThumb.firing{
+  background:radial-gradient(circle at 35% 30%, #d8252c 0%, #731217 65%, #250709 100%);
+  border-color:#fff;
+  box-shadow:0 0 28px rgba(255,77,77,.95), inset 0 0 10px #ff9e9e;
+}
+#aimJoystickThumb .tlbl{font-size:10px;font-weight:900;letter-spacing:.8px;color:#fff;margin-top:2px}
+.fire-crosshair{
+  width:22px;height:22px;position:relative;display:flex;align-items:center;justify-content:center;
+}
+.fire-crosshair::before, .fire-crosshair::after{
+  content:'';position:absolute;background:#fff;box-shadow:0 0 4px #ff5a5a;
+}
+.fire-crosshair::before{width:20px;height:2.5px;border-radius:1px}
+.fire-crosshair::after{width:2.5px;height:20px;border-radius:1px}
+.fire-ring{
+  position:absolute;inset:5px;border:1.5px solid rgba(255,255,255,.3);border-radius:50%;pointer-events:none;
+}
+
+/* Çevreleyen Aksiyon Butonları - Ekranın alt ortasında yatay sıra */
+.tbtn-action{
+  position:fixed;width:48px;height:48px;z-index:30;
+}
+/* Alt orta buton sırası - soldan sağa */
+#touchReloadBtn{left:50%;bottom:14px;transform:translateX(-220px)}
+#touchMeleeBtn{left:50%;bottom:14px;transform:translateX(-160px);border-color:rgba(180,80,60,.5)}
+#touchInteractBtn{left:50%;bottom:14px;transform:translateX(-100px);border-color:rgba(232,178,58,.5)}
+#touchInteractBtn.ready{
+  border-color:var(--amber);background:radial-gradient(circle, #523a0f 0%, #261904 100%);
+  box-shadow:0 0 20px rgba(232,178,58,.8);animation:tPulseAmber .7s infinite alternate;color:#fff;
+}
+#touchGrenadeBtn{left:50%;bottom:14px;transform:translateX(220px);width:44px;height:44px;border-color:rgba(200,100,40,.5)}
+#touchBarricadeBtn{left:50%;bottom:14px;transform:translateX(280px);width:44px;height:44px;border-color:rgba(90,169,230,.5)}
+#touchReloadBtn.empty{
+  border-color:var(--amber);animation:tPulseAmber .7s infinite alternate;
+}
+
+/* Animasyonlar */
+@keyframes tPulseBad{from{transform:scale(1);box-shadow:0 0 6px rgba(255,77,77,.4)}to{transform:scale(1.08);box-shadow:0 0 22px rgba(255,77,77,.9)}}
+@keyframes tPulseGood{from{transform:scale(1);box-shadow:0 0 6px rgba(94,204,116,.4)}to{transform:scale(1.08);box-shadow:0 0 20px rgba(94,204,116,.85)}}
+@keyframes tPulseAmber{from{transform:scale(1);box-shadow:0 0 6px rgba(232,178,58,.4)}to{transform:scale(1.08);box-shadow:0 0 22px rgba(232,178,58,.9)}}
+
+/* Mobil HUD Düzenlemeleri & Ekran Duyarlılığı */
+#interactHint{pointer-events:auto;cursor:pointer;touch-action:none}
+#minimapBox{pointer-events:auto;cursor:pointer;touch-action:none}
+.wslot{pointer-events:auto;cursor:pointer;touch-action:none}
+
+@media (max-width: 900px){
+  #hudTopLeft{left:8px;top:8px;width:200px}
+  #hudTopRight{right:8px;top:8px;min-width:160px}
+  #floorLabel{font-size:16px}
+  #minimapBox{top:85px;right:8px;padding:3px;transform:scale(0.85);transform-origin:top right}
+  #missionBox{left:8px;bottom:220px;max-width:240px;background:rgba(8,9,12,.85)}
+  #weaponBox{right:8px;bottom:285px;min-width:145px;background:rgba(8,9,12,.85)}
+  #interactHint{bottom:210px;font-size:13px;padding:6px 12px}
+  #toasts{top:20%}
+}
+@media (max-height: 480px){
+  /* Çok dar yatay ekranlar */
+  #touchUtilityBar{bottom:180px;gap:5px}
+  .tbtn-util{width:38px;height:38px}
+  #virtualJoystick{width:120px;height:120px}
+  #joystickThumb{width:46px;height:46px}
+  .tbtn-fire{width:70px;height:70px;right:8px;bottom:8px}
+  .tbtn-action{width:44px;height:44px}
+  #touchReloadBtn{right:88px;bottom:14px}
+  #touchMeleeBtn{right:84px;bottom:68px}
+  #touchInteractBtn{right:12px;bottom:90px}
+  #touchGrenadeBtn{right:124px;bottom:112px;width:38px;height:38px}
+  #touchBarricadeBtn{right:70px;bottom:124px;width:38px;height:38px}
+  #touchSprintBtn{left:128px;bottom:88px;width:44px;height:44px}
+  #missionBox{display:none}
+  #weaponBox{bottom:auto;top:85px;right:auto;left:8px}
+}
 </style>
 </head>
 <body>
@@ -218,6 +416,98 @@ kbd{background:#1b1d24;border:1px solid #343843;border-radius:3px;padding:0 5px;
   <div id="toasts"></div>
   <div id="fpsBox" class="hidden"></div>
   <div id="debugBox" class="hidden"></div>
+</div>
+
+<!-- Toggle butonu - HER ZAMAN görünür, touchControls dışında -->
+<button type="button" class="tbtn tbtn-icon" id="touchToggleBtn" aria-label="Kontrolleri Aç/Kapat" title="Kontrolleri Aç/Kapat" style="position:fixed;top:max(10px, env(safe-area-inset-top));right:max(14px, env(safe-area-inset-right));z-index:99;pointer-events:auto;">🎮</button>
+
+<!-- ============ MOBİL DOKUNMATİK KONTROLLER ============ -->
+<div id="touchControls" class="touch-controls hidden">
+  <!-- Üst Kısayol Barı (Duraklat, Envanter, Harita) -->
+  <div id="touchTopBar">
+    <button type="button" class="tbtn tbtn-icon" id="touchPauseBtn" aria-label="Duraklat" title="Duraklat (Esc)">⏸</button>
+    <button type="button" class="tbtn tbtn-icon" id="touchInvBtn" aria-label="Envanter" title="Envanter (Tab)">🎒</button>
+    <button type="button" class="tbtn tbtn-icon" id="touchMapBtn" aria-label="Harita" title="Harita (M)">🗺️</button>
+  </div>
+
+  <!-- Sol Hareket Bölgesi -->
+  <div id="touchMoveZone">
+    <div id="virtualJoystick">
+      <div id="joystickBase">
+        <span class="jdir up">▲</span>
+        <span class="jdir right">►</span>
+        <span class="jdir down">▼</span>
+        <span class="jdir left">◄</span>
+        <div id="joystickThumb"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sağ Hızlı Destek Araçları (Fener, Can, Enerji, Silah) -->
+  <div id="touchUtilityBar">
+    <button type="button" class="tbtn tbtn-util" id="touchFlashlightBtn" aria-label="El Feneri" title="El Feneri (F)">
+      <span class="ticon">🔦</span>
+      <span class="tlbl">FENER</span>
+    </button>
+    <button type="button" class="tbtn tbtn-util" id="touchHealBtn" aria-label="Hızlı Can" title="Medkit Kullan (H)">
+      <span class="ticon">💊</span>
+      <span class="tlbl">CAN</span>
+    </button>
+    <button type="button" class="tbtn tbtn-util" id="touchEnergyBtn" aria-label="Hızlı Enerji" title="Enerji İçeceği (J)">
+      <span class="ticon">⚡</span>
+      <span class="tlbl">ENERJİ</span>
+    </button>
+    <button type="button" class="tbtn tbtn-util" id="touchSwapWeaponBtn" aria-label="Silah Değiştir" title="Silah Değiştir (Q)">
+      <span class="ticon">🔄</span>
+      <span class="tlbl">SİLAH</span>
+    </button>
+  </div>
+
+  <!-- Sağ Aksiyon Grubu & Nişan-Ateş Joystick'i (Brawl Stars Stili) -->
+  <div id="touchActionZone">
+    <!-- Sağ Sanal Nişan & Ateş Joystick'i -->
+    <div id="virtualAimJoystick">
+      <div id="aimJoystickBase">
+        <span class="jdir up">▲</span>
+        <span class="jdir right">►</span>
+        <span class="jdir down">▼</span>
+        <span class="jdir left">◄</span>
+        <div id="aimJoystickThumb">
+          <div class="fire-ring"></div>
+          <div class="fire-crosshair"></div>
+          <span class="tlbl">ATEŞ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Çevreleyen Aksiyon Butonları -->
+    <button type="button" class="tbtn tbtn-action" id="touchReloadBtn" aria-label="Şarjör Doldur" title="Şarjör Doldur (R)">
+      <span class="ticon">🔁</span>
+      <span class="tlbl">ŞARJÖR</span>
+    </button>
+    <button type="button" class="tbtn tbtn-action" id="touchMeleeBtn" aria-label="Yakın Dövüş" title="Yakın Dövüş (Space)">
+      <span class="ticon">🗡️</span>
+      <span class="tlbl">VURUŞ</span>
+    </button>
+    <button type="button" class="tbtn tbtn-action tbtn-interact" id="touchInteractBtn" aria-label="Etkileşim" title="Etkileşim / Kapı (E)">
+      <span class="ticon">✋</span>
+      <span class="tlbl">KULLAN</span>
+    </button>
+    <button type="button" class="tbtn tbtn-action" id="touchGrenadeBtn" aria-label="Bomba At" title="Bomba At (G)">
+      <span class="ticon">💣</span>
+      <span class="tlbl">BOMBA</span>
+    </button>
+    <button type="button" class="tbtn tbtn-action" id="touchBarricadeBtn" aria-label="Barikat Kur" title="Barikat Kur (B)">
+      <span class="ticon">🛡️</span>
+      <span class="tlbl">BARİKAT</span>
+    </button>
+    
+    <!-- Sprint Butonu -->
+    <button type="button" class="tbtn tbtn-sprint" id="touchSprintBtn" aria-label="Koş">
+      <span class="ticon">🏃</span>
+      <span class="tlbl">KOŞ</span>
+    </button>
+  </div>
 </div>
 
 <!-- ============ ANA MENÜ ============ -->
@@ -291,6 +581,12 @@ kbd{background:#1b1d24;border:1px solid #343843;border-radius:3px;padding:0 5px;
         <h3 style="font-size:14px">ETKİLEŞİM</h3>
         <p><kbd>E</kbd> kapı aç / dolap ara / nesne kullan · <kbd>F</kbd> el feneri · <kbd>B</kbd> barikat kur ·
         <kbd>G</kbd> bomba at · <kbd>Tab</kbd> veya <kbd>I</kbd> envanter · <kbd>M</kbd> harita · <kbd>Esc</kbd> duraklat</p>
+        <h3 style="font-size:14px;color:var(--amber)">MOBİL DOKUNMATİK KONTROLLER (BRAWL STARS STİLİ)</h3>
+        <p><b>Sol sanal joystick:</b> 360° analog hareket · <b>KOŞ butonu:</b> basılı tut / çift tıkla kilitle ·
+        <b>Sağ nişan & ateş joystick'i:</b> Çektiğin yöne doğrudan nişan alır ve ateş eder! Tek tıkla dokunursan (Quick-tap) otomatik olarak en yakın zombiye döner ve ateş açar ·
+        <b>Aksiyon butonları:</b> Şarjör [R], Vuruş [Space], Kullan [E], Bomba [G], Barikat [B] ·
+        <b>Yardımcı araçlar:</b> Can [H], Enerji [J], Fener [F], Silah Değiştir [Q] ·
+        <b>Üst menü:</b> Duraklat, Envanter, Harita, Kontrolleri Aç/Kapat.</p>
         <h3 style="font-size:14px">HAYATTA KALMA</h3>
         <p>Sessiz hareket et: koşmak, ateş etmek ve kapı kırmak gürültü yapar ve zombileri çeker. Karanlıkta el fenerin
         görüş mesafeni artırır ama seni de belli eder. Yüksek katlarda mühimmat azalır: kaçmak, barikat kurmak ve
@@ -559,6 +855,9 @@ const BIND_LABELS = {
 const Input = {
   bindings: JSON.parse(JSON.stringify(DEFAULT_BINDINGS)),
   down: Object.create(null), justDown: Object.create(null),
+  virtualDown: Object.create(null), virtualJustDown: Object.create(null),
+  analogMove: { x: 0, y: 0, active: false },
+  touchAim: { active: false, angle: 0, x: 0, y: 0 },
   mouse: { x: 0, y: 0, wx: 0, wy: 0, down: false, rightDown: false, inside: false },
   listeningFor: null, _unbind: [],
   init(canvas) {
@@ -577,6 +876,7 @@ const Input = {
       this.mouse.x = (e.clientX - r.left) * (canvas.width / r.width) / (window.devicePixelRatio || 1);
       this.mouse.y = (e.clientY - r.top) * (canvas.height / r.height) / (window.devicePixelRatio || 1);
       this.mouse.inside = true;
+      if (this.touchAim.active) this.touchAim.active = false;
     };
     canvas.addEventListener('mousemove', mm);
     canvas.addEventListener('mousedown', (e) => { e.preventDefault(); if (e.button === 0) this.mouse.down = true; if (e.button === 2) this.mouse.rightDown = true; });
@@ -585,18 +885,40 @@ const Input = {
     canvas.addEventListener('mouseleave', () => { this.mouse.inside = false; });
   },
   isDown(action) {
+    if (this.virtualDown[action]) return true;
     const keys = this.bindings[action];
     if (!keys) return false;
     for (const k of keys) if (this.down[k]) return true;
     return false;
   },
   pressed(action) {
+    if (this.virtualJustDown[action]) return true;
     const keys = this.bindings[action];
     if (!keys) return false;
     for (const k of keys) if (this.justDown[k]) return true;
     return false;
   },
-  clearFrame() { this.justDown = Object.create(null); },
+  triggerAction(action) {
+    this.virtualJustDown[action] = true;
+  },
+  setVirtual(action, isDown) {
+    const v = !!isDown;
+    if (v && !this.virtualDown[action]) this.virtualJustDown[action] = true;
+    this.virtualDown[action] = v;
+  },
+  resetVirtual() {
+    this.virtualDown = Object.create(null);
+    this.virtualJustDown = Object.create(null);
+    this.analogMove.x = 0;
+    this.analogMove.y = 0;
+    this.analogMove.active = false;
+    this.touchAim.active = false;
+    this.mouse.down = false;
+  },
+  clearFrame() {
+    this.justDown = Object.create(null);
+    this.virtualJustDown = Object.create(null);
+  },
   keyName(code) {
     if (!code) return '—';
     const map = { ShiftLeft: 'L.Shift', ShiftRight: 'R.Shift', Space: 'Boşluk', Escape: 'Esc', Tab: 'Tab',
@@ -615,6 +937,7 @@ const DEFAULT_SETTINGS = {
   master: 0.85, sfx: 0.9, music: 0.4, difficulty: 'normal',
   showHud: true, showFps: false, particles: true, screenShake: true, blood: true,
   grain: true, darkness: 1.0, autoReload: true, zoom: 1.0, showDamageNumbers: true,
+  mobileControls: 'auto', aimAssist: true,
   bindings: null
 };
 
@@ -2075,16 +2398,29 @@ class Pickup {
   }
   update(dt) { this.bob += dt * 2.4; }
   get displayName() {
-    if (this.kind === 'ammo') return AMMO[this.itemId].name + ' mühimmatı x' + this.amount;
-    if (this.kind === 'weapon') return WEAPONS[this.itemId].name;
-    return ITEMS[this.itemId].name + (this.amount > 1 ? ' x' + this.amount : '');
+    if (this.kind === 'ammo') {
+      const a = (typeof AMMO !== 'undefined' && this.itemId) ? AMMO[this.itemId] : null;
+      return (a ? a.name : (this.itemId || 'Mühimmat')) + ' mühimmatı x' + (this.amount || 1);
+    }
+    if (this.kind === 'weapon') {
+      const w = (typeof WEAPONS !== 'undefined' && this.itemId) ? WEAPONS[this.itemId] : null;
+      return w ? w.name : (this.itemId || 'Silah');
+    }
+    const it = (typeof ITEMS !== 'undefined' && this.itemId) ? ITEMS[this.itemId] : null;
+    return (it ? it.name : (this.itemId || 'Eşya')) + (this.amount > 1 ? ' x' + this.amount : '');
   }
   draw(ctx) {
     const yy = this.y + Math.sin(this.bob) * 2.4;
     let col = '#e8b23a', label = '?';
-    if (this.kind === 'ammo') { col = AMMO[this.itemId].color; label = AMMO[this.itemId].icon; }
-    else if (this.kind === 'weapon') { col = '#9c9ca4'; label = 'SİL'; }
-    else { const it = ITEMS[this.itemId]; col = it.color; label = it.icon; }
+    if (this.kind === 'ammo') {
+      const a = (typeof AMMO !== 'undefined' && this.itemId) ? AMMO[this.itemId] : null;
+      col = a ? a.color : '#e8b23a'; label = a ? a.icon : 'AM';
+    } else if (this.kind === 'weapon') {
+      col = '#9c9ca4'; label = 'SİL';
+    } else {
+      const it = (typeof ITEMS !== 'undefined' && this.itemId) ? ITEMS[this.itemId] : null;
+      col = it ? it.color : '#e8b23a'; label = it ? it.icon : 'ES';
+    }
     ctx.save();
     ctx.globalAlpha = 0.25; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(this.x, yy, 13, 0, TAU); ctx.fill();
     ctx.globalAlpha = 1;
@@ -2322,10 +2658,15 @@ class Player {
     }
     // hareket girdisi
     let ix = 0, iy = 0;
-    if (Input.isDown('up')) iy -= 1;
-    if (Input.isDown('down')) iy += 1;
-    if (Input.isDown('left')) ix -= 1;
-    if (Input.isDown('right')) ix += 1;
+    if (Input.analogMove && Input.analogMove.active) {
+      ix = Input.analogMove.x;
+      iy = Input.analogMove.y;
+    } else {
+      if (Input.isDown('up')) iy -= 1;
+      if (Input.isDown('down')) iy += 1;
+      if (Input.isDown('left')) ix -= 1;
+      if (Input.isDown('right')) ix += 1;
+    }
     const canAct = this.useTimer <= 0;
     if (!canAct) { ix = 0; iy = 0; }
     const l = Math.hypot(ix, iy);
@@ -2388,8 +2729,34 @@ class Player {
     } else this.lowHpWarn = 0;
     // nişan
     const cam = game.camera;
-    const wx = Input.mouse.x / cam.zoom + cam.x, wy = Input.mouse.y / cam.zoom + cam.y;
-    this.angle = Math.atan2(wy - this.y, wx - this.x);
+    if (Input.touchAim && Input.touchAim.active) {
+      this.angle = Input.touchAim.angle;
+    } else if (Input.mouse.inside || !('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+      const wx = Input.mouse.x / cam.zoom + cam.x, wy = Input.mouse.y / cam.zoom + cam.y;
+      this.angle = Math.atan2(wy - this.y, wx - this.x);
+    } else {
+      let aimed = false;
+      if (SaveManager.data && SaveManager.data.settings && SaveManager.data.settings.aimAssist !== false) {
+        let bestZ = null, bestD = 480;
+        for (const z of game.zombies) {
+          if (z.dead) continue;
+          const d = dist(z.x, z.y, this.x, this.y);
+          if (d < bestD) {
+            if (game.map.lineOfSight(this.x, this.y, z.x, z.y)) {
+              bestD = d;
+              bestZ = z;
+            }
+          }
+        }
+        if (bestZ) {
+          this.angle = Math.atan2(bestZ.y - this.y, bestZ.x - this.x);
+          aimed = true;
+        }
+      }
+      if (!aimed && (ix !== 0 || iy !== 0)) {
+        this.angle = Math.atan2(iy, ix);
+      }
+    }
   }
   emitNoise(game, radius) { game.noiseEvent(this.x, this.y, radius, 0.35, true); this.noiseTimer = 0.6; }
   /* ---------- ateş ---------- */
@@ -3823,6 +4190,7 @@ class Game {
     this.achievements = new AchievementSystem(this);
     this.loot = new LootSystem(this);
     this.ui = new UIManager(this);
+    this.touch = new TouchController(this);
     this.rng = new RNG((Date.now() ^ 0x9e3779b9) >>> 0);
     this.seed = Math.floor(Math.random() * 0x7fffffff);
     this.map = null; this.player = null; this.flow = null;
@@ -3845,6 +4213,7 @@ class Game {
   init() {
     Input.init(this.canvas);
     this.ui.init();
+    if (this.touch) this.touch.init();
     window.addEventListener('resize', () => this.resize());
     this.resize();
     this.ctx.imageSmoothingEnabled = true;
@@ -3964,7 +4333,65 @@ class Game {
       return pk;
     });
     const wallFloor = isFloorLike(map.get(Math.floor(map.spawn.x / TILE), Math.floor(map.spawn.y / TILE)));
-    this.player.x = map.spawn.x; this.player.y = map.spawn.y;
+    
+    // Güvenli spawn pozisyonu bul - prop'lardan ve engellerden uzak
+    let safeSpawn = { x: map.spawn.x, y: map.spawn.y };
+    let isSafe = true;
+    
+    // Prop'larla ve engellerle çakışma kontrolü
+    for (const prop of this.props) {
+      const dx = safeSpawn.x - prop.x;
+      const dy = safeSpawn.y - prop.y;
+      const minDist = (this.player.r || 13) + (prop.r || 20);
+      if (Math.hypot(dx, dy) < minDist) {
+        isSafe = false;
+        break;
+      }
+    }
+    
+    // Duvar veya engelle çakışıyor mu?
+    if (isSafe && (map.circleCollide(safeSpawn.x, safeSpawn.y, 13) || map.obstacleCollide(safeSpawn.x, safeSpawn.y, 13))) {
+      isSafe = false;
+    }
+    
+    // Güvenli değilse, spiral aramada yeni pozisyon bul
+    if (!isSafe) {
+      for (let radius = 40; radius < 400; radius += 30) {
+        for (let i = 0; i < 16; i++) {
+          const angle = (i * Math.PI * 2) / 16;
+          const testX = map.spawn.x + Math.cos(angle) * radius;
+          const testY = map.spawn.y + Math.sin(angle) * radius;
+          
+          // Harita sınırları içinde mi?
+          if (testX < 40 || testY < 40 || testX > map.w * TILE - 40 || testY > map.h * TILE - 40) continue;
+          
+          // Duvar veya engel var mı?
+          if (map.pointBlocked(testX, testY) || map.circleCollide(testX, testY, 13) || map.obstacleCollide(testX, testY, 13)) continue;
+          
+          // Prop'larla çakışıyor mu?
+          let propClear = true;
+          for (const prop of this.props) {
+            const dx = testX - prop.x;
+            const dy = testY - prop.y;
+            const minDist = 13 + (prop.r || 20) + 10; // +10 ekstra güvenlik mesafesi
+            if (Math.hypot(dx, dy) < minDist) {
+              propClear = false;
+              break;
+            }
+          }
+          
+          if (propClear) {
+            safeSpawn = { x: testX, y: testY };
+            isSafe = true;
+            break;
+          }
+        }
+        if (isSafe) break;
+      }
+    }
+    
+    this.player.x = safeSpawn.x; 
+    this.player.y = safeSpawn.y;
     if (this.player.inv.count('scrap') === 0 && this.floor === 1) this.player.inv.addItem('scrap', 5);
     this.zombies = []; this.lures = []; this.noiseEvents = [];
     this.bullets.list = []; this.thrown.list = [];
@@ -4052,6 +4479,7 @@ class Game {
       const scale = this.timeScale;
       this.handleGlobalKeys();
       this.update(dt * scale);
+      if (this.touch) this.touch.update(dt * scale);
       Input.clearFrame();
     } else if (this.state === 'playing') {
       Input.clearFrame();
@@ -4065,7 +4493,10 @@ class Game {
     if (p && !p.dead) {
       const w = p.weapon;
       const isAuto = w ? (WEAPONS[w.id].auto || WEAPONS[w.id].cls === 'melee') : false;
+      const isMobileAim = Input.touchAim && Input.touchAim.active;  // mobil joystick aktif mi?
       if (Input.mouse.down) {
+        // Mobilde joystick sürüklenirken sürekli ateş et (semiLatch'i resetle)
+        if (isMobileAim) p.semiLatch = false;
         if (isAuto || !p.semiLatch) { p.tryShoot(this); if (!isAuto) p.semiLatch = true; }
       } else p.semiLatch = false;
     }
@@ -4189,6 +4620,7 @@ class Game {
   /* ---------------- etkileşim ---------------- */
   findInteraction() {
     const p = this.player;
+    if (!p || !this.map) return null;
     let best = null, bestD = 76;
     // merdiven / asansör
     if (this.map.stairs && dist(p.x, p.y, this.map.stairs.x, this.map.stairs.y) < 90) return { kind: 'stairs', label: 'Yangın merdiveni — yukarı çık' + (this.floor > 1 ? ' · Shift+E: aşağı in' : ''), x: this.map.stairs.x, y: this.map.stairs.y };
@@ -4196,20 +4628,32 @@ class Game {
       return { kind: 'elevator', label: this.map.power ? 'Servis asansörü çalışıyor — yukarı çık' : 'Asansör: jeneratör çalışmıyor', x: this.map.elevator.x, y: this.map.elevator.y };
     }
     if (this.helipad && dist(p.x, p.y, this.helipad.x, this.helipad.y) < 90) return { kind: 'helipad', label: 'Tahliye: helikopteri çağır', x: this.helipad.x, y: this.helipad.y };
-    for (const pr of this.props) {
-      const d = dist(p.x, p.y, pr.x, pr.y);
-      if (d < bestD) { best = { kind: 'prop', prop: pr, label: pr.interactLabel, x: pr.x, y: pr.y }; bestD = d; }
+    if (this.props && Array.isArray(this.props)) {
+      for (const pr of this.props) {
+        if (!pr) continue;
+        const d = dist(p.x, p.y, pr.x, pr.y);
+        if (d < bestD) { best = { kind: 'prop', prop: pr, label: pr.interactLabel || 'Kullan', x: pr.x, y: pr.y }; bestD = d; }
+      }
     }
-    for (const pk of this.pickups) {
-      const d = dist(p.x, p.y, pk.x, pk.y);
-      if (d < 46 && d < bestD) { best = { kind: 'pickup', pickup: pk, label: 'Al: ' + pk.displayName, x: pk.x, y: pk.y }; bestD = d; }
+    if (this.pickups && Array.isArray(this.pickups)) {
+      for (const pk of this.pickups) {
+        if (!pk) continue;
+        const d = dist(p.x, p.y, pk.x, pk.y);
+        if (d < 46 && d < bestD) {
+          const name = pk.displayName || 'Eşya';
+          best = { kind: 'pickup', pickup: pk, label: 'Al: ' + name, x: pk.x, y: pk.y };
+          bestD = d;
+        }
+      }
     }
     // kapılar
-    const px = p.x + Math.cos(p.angle) * 26, py = p.y + Math.sin(p.angle) * 26;
-    const dTile = this.map.doorAt(Math.floor(px / TILE), Math.floor(py / TILE));
-    if (dTile && dist(p.x, p.y, dTile.x * TILE + 24, dTile.y * TILE + 24) < 72) {
-      const label = dTile.open ? 'Kapıyı kapat' : (dTile.locked ? 'Kilitli (Kart ' + dTile.locked + ')' : 'Kapıyı aç') + (dTile.barricade > 0 ? ' · barikat ' + Math.round(dTile.barricade) : '');
-      return { kind: 'door', door: dTile, label, x: dTile.x * TILE + 24, y: dTile.y * TILE + 24 };
+    if (this.map && typeof this.map.doorAt === 'function') {
+      const px = p.x + Math.cos(p.angle) * 26, py = p.y + Math.sin(p.angle) * 26;
+      const dTile = this.map.doorAt(Math.floor(px / TILE), Math.floor(py / TILE));
+      if (dTile && dist(p.x, p.y, dTile.x * TILE + 24, dTile.y * TILE + 24) < 72) {
+        const label = dTile.open ? 'Kapıyı kapat' : (dTile.locked ? 'Kilitli (Kart ' + dTile.locked + ')' : 'Kapıyı aç') + (dTile.barricade > 0 ? ' · barikat ' + Math.round(dTile.barricade) : '');
+        return { kind: 'door', door: dTile, label, x: dTile.x * TILE + 24, y: dTile.y * TILE + 24 };
+      }
     }
     return best;
   }
@@ -4217,12 +4661,13 @@ class Game {
     const it = this.exitPrompt || this.findInteraction();
     if (!it) { this.ui.msg('Etkileşim için yakında nesne yok.'); return; }
     const p = this.player;
+    if (!p) return;
     switch (it.kind) {
       case 'stairs':
         if (descend) this.prevFloor(); else this.nextFloor();
         break;
       case 'elevator':
-        if (this.map.power) { this.ui.msg('Asansör: ' + (this.floor + 1) + '. kata çıkılıyor'); this.nextFloor(); }
+        if (this.map && this.map.power) { this.ui.msg('Asansör: ' + (this.floor + 1) + '. kata çıkılıyor'); this.nextFloor(); }
         else this.ui.warn('Asansör için önce jeneratörü çalıştır.');
         break;
       case 'helipad':
@@ -4230,25 +4675,28 @@ class Game {
         break;
       case 'door': {
         const d = it.door;
-        if (d.open) { d.open = false; this.map.set(d.x, d.y, T.DOOR); Sound.door(false); }
+        if (!d) break;
+        if (d.open) { d.open = false; if (this.map) this.map.set(d.x, d.y, T.DOOR); Sound.door(false); }
         else if (d.locked) {
           const key = 'keycard' + d.locked;
-          if (p.inv.count(key) > 0) { d.locked = null; d.open = true; this.map.set(d.x, d.y, T.DOOR_OPEN); Sound.door(true); this.ui.msg('Kart ' + key.slice(-1) + ' kullanıldı. Kapı açıldı.'); this.map.markSeen(d.x * TILE, d.y * TILE, 400); }
+          if (p.inv.count(key) > 0) { d.locked = null; d.open = true; if (this.map) this.map.set(d.x, d.y, T.DOOR_OPEN); Sound.door(true); this.ui.msg('Kart ' + key.slice(-1) + ' kullanıldı. Kapı açıldı.'); if (this.map) this.map.markSeen(d.x * TILE, d.y * TILE, 400); }
           else this.ui.warn('Bu kapı Kart ' + d.locked + ' istiyor. Kartı bul.');
-        } else { d.open = true; this.map.set(d.x, d.y, T.DOOR_OPEN); Sound.door(true); this.noiseEvent(d.x * TILE, d.y * TILE, 240, 0.4); }
+        } else { d.open = true; if (this.map) this.map.set(d.x, d.y, T.DOOR_OPEN); Sound.door(true); this.noiseEvent(d.x * TILE, d.y * TILE, 240, 0.4); }
         break; }
       case 'pickup': {
         const pk = it.pickup;
+        if (!pk) break;
         const idx = this.pickups.indexOf(pk);
+        if (idx < 0) break;
         let ok = false;
         if (pk.kind === 'ammo') ok = p.inv.addAmmo(pk.itemId, pk.amount) > 0;
         else if (pk.kind === 'weapon') { p.inv.addWeapon(pk.itemId); ok = true; }
         else ok = p.inv.addItem(pk.itemId, pk.amount) > 0;
-        if (ok) { this.pickups.splice(idx, 1); Sound.pickup(); this.ui.msg('Alındı: ' + pk.displayName); }
+        if (ok) { this.pickups.splice(idx, 1); Sound.pickup(); this.ui.msg('Alındı: ' + (pk.displayName || 'Eşya')); }
         else this.ui.warn('Envanter dolu! (' + Math.round(p.inv.weight) + '/' + Math.round(p.inv.capacity) + ')');
         break; }
       case 'prop':
-        this.useProp(it.prop);
+        if (it.prop) this.useProp(it.prop);
         break;
     }
   }
@@ -5074,8 +5522,13 @@ class UIManager {
     this.modalOpen = ['floorIntro', 'eventModal', 'inventoryScreen', 'mapScreen', 'shopScreen'].includes(id);
     if (id === 'mainMenu') { this.setHudVisible(false); this.updateMenuMeta(); }
     if (id === null) this.setHudVisible(this.game.state === 'playing' || this.game.state === 'paused');
+    if (this.game.touch) this.game.touch.updateVisibility();
   }
-  setHudVisible(v) { this.hudAllowed = !!v; this.dom.hud.classList.toggle('hidden', !v || !SaveManager.data.settings.showHud); }
+  setHudVisible(v) {
+    this.hudAllowed = !!v;
+    this.dom.hud.classList.toggle('hidden', !v || !SaveManager.data.settings.showHud);
+    if (this.game.touch) this.game.touch.updateVisibility();
+  }
   resize() {
     if (this.game.map && this.dom.minimap) this.renderMinimap();
     const ms = el('mapScreen');
@@ -5532,6 +5985,8 @@ class UIManager {
       { type: 'switch', key: 'grain', label: 'Film greni', hint: 'Atmosferik gürültü katmanı' },
       { type: 'switch', key: 'autoReload', label: 'Otomatik şarjör', hint: 'Şarjör boşalınca kendiliğinden doldur' },
       { type: 'switch', key: 'showDamageNumbers', label: 'Hasar sayıları', hint: 'Vuruşlarda sayı göster' },
+      { type: 'select', key: 'mobileControls', label: 'Mobil kontroller', hint: 'Dokunmatik buton ve joystick arayüzü', options: [['auto', 'OTOMATİK (DOKUNMATİKTE AÇ)'], ['on', 'HER ZAMAN AÇIK'], ['off', 'KAPALI']] },
+      { type: 'switch', key: 'aimAssist', label: 'Mobil hedef yardımı', hint: 'Yakındaki zombilere otomatik nişan desteği' },
       { type: 'select', key: 'difficulty', label: 'Zorluk', hint: 'Yeni koşuya uygulanır', options: [['easy', 'KOLAY'], ['normal', 'NORMAL'], ['hard', 'ZOR']] }
     ];
     for (const r of rows) {
@@ -5555,13 +6010,25 @@ class UIManager {
         const sw = document.createElement('div');
         sw.className = 'switch' + (s[r.key] ? ' on' : '');
         sw.innerHTML = '<i></i>';
-        sw.addEventListener('click', () => { s[r.key] = !s[r.key]; sw.classList.toggle('on', s[r.key]); SaveManager.save(); this.updateHud(true); });
+        sw.addEventListener('click', () => {
+          s[r.key] = !s[r.key];
+          sw.classList.toggle('on', s[r.key]);
+          SaveManager.save();
+          this.updateHud(true);
+          if (this.game.touch) this.game.touch.updateVisibility();
+        });
         div.appendChild(sw);
       } else if (r.type === 'select') {
         const sel = document.createElement('select');
         for (const o of r.options) { const op = document.createElement('option'); op.value = o[0]; op.textContent = o[1]; sel.appendChild(op); }
         sel.value = s[r.key];
-        sel.addEventListener('change', () => { s[r.key] = sel.value; this.game.diff.setPreset(sel.value); SaveManager.save(); this.msg('Zorluk: ' + DIFFICULTY_PRESETS[sel.value].name); });
+        sel.addEventListener('change', () => {
+          s[r.key] = sel.value;
+          if (r.key === 'difficulty') this.game.diff.setPreset(sel.value);
+          if (r.key === 'mobileControls' && this.game.touch) this.game.touch.updateVisibility();
+          SaveManager.save();
+          this.msg(r.label + ': ' + sel.value);
+        });
         div.appendChild(sel);
       }
       body.appendChild(div);
@@ -5645,6 +6112,501 @@ class UIManager {
       });
       div.appendChild(b);
       this.dom.perkList.appendChild(div);
+    }
+  }
+}
+
+/* ======================= MOBİL DOKUNMATİK KONTROLÖR ======================= */
+class TouchController {
+  constructor(game) {
+    this.game = game;
+    this.dom = {};
+    this.userHidden = false;
+    this.joystick = {
+      pointerId: null,
+      centerX: 0, centerY: 0,
+      active: false,
+      maxDist: 46,
+      deadZone: 6
+    };
+    this.aimJoystick = {
+      pointerId: null,
+      centerX: 0, centerY: 0,
+      active: false,
+      maxDist: 46,
+      deadZone: 7,
+      startX: 0, startY: 0,
+      startTime: 0,
+      dragged: false
+    };
+    this.aimPointerId = null;
+    this.sprintLocked = false;
+    this._pulseTimer = 0;
+  }
+  init() {
+    const ids = [
+      'touchControls', 'touchMoveZone', 'virtualJoystick', 'joystickBase', 'joystickThumb',
+      'touchSprintBtn', 'virtualAimJoystick', 'aimJoystickBase', 'aimJoystickThumb',
+      'touchReloadBtn', 'touchMeleeBtn', 'touchInteractBtn', 'touchGrenadeBtn', 'touchBarricadeBtn',
+      'touchFlashlightBtn', 'touchHealBtn', 'touchEnergyBtn', 'touchSwapWeaponBtn',
+      'touchPauseBtn', 'touchInvBtn', 'touchMapBtn', 'touchToggleBtn', 'interactHint', 'minimapBox'
+    ];
+    for (const id of ids) this.dom[id] = el(id);
+    if (!this.dom.touchControls) return;
+
+    this.bindJoystick();
+    this.bindAimJoystick();
+    this.bindActions();
+    this.bindAimOnCanvas();
+    this.bindWindowEvents();
+    this.updateVisibility();
+  }
+  isTouchCapable() {
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia('(pointer: coarse)').matches;
+  }
+  updateVisibility() {
+    if (!this.dom.touchControls) return;
+    const s = SaveManager.data?.settings;
+    const mode = s?.mobileControls || 'auto';
+    const isTouch = this.isTouchCapable();
+    const isSmall = window.innerWidth <= 960;
+    const allowed = mode === 'on' || (mode === 'auto' && (isTouch || isSmall));
+    const inGame = this.game.state === 'playing' && !this.game.ui.modalOpen;
+    const show = allowed && !this.userHidden && inGame;
+    this.dom.touchControls.classList.toggle('hidden', !show);
+    
+    // Toggle butonu: mobil cihazda ve oyun içindeyse DAIMA görünür
+    if (this.dom.touchToggleBtn) {
+      this.dom.touchToggleBtn.style.display = (allowed && inGame) ? '' : 'none';
+    }
+    
+    if (!show) this.reset();
+  }
+  toggleUserVisibility() {
+    this.userHidden = !this.userHidden;
+    this.updateVisibility();
+    if (this.game.ui) this.game.ui.msg('Mobil kontroller: ' + (this.userHidden ? 'Gizlendi' : 'Gösteriliyor'));
+  }
+  /* ---------- Sol Sanal Hareket Joystick'i ---------- */
+  bindJoystick() {
+    const zone = this.dom.touchMoveZone;
+    const base = this.dom.joystickBase;
+    const thumb = this.dom.joystickThumb;
+    if (!zone || !base || !thumb) return;
+
+    const startJoy = (e) => {
+      if (this.joystick.pointerId !== null) return;
+      this.joystick.pointerId = e.pointerId;
+      try { zone.setPointerCapture(e.pointerId); } catch (_) {}
+      const rect = base.getBoundingClientRect();
+      this.joystick.centerX = rect.left + rect.width / 2;
+      this.joystick.centerY = rect.top + rect.height / 2;
+      this.joystick.maxDist = Math.max(34, rect.width * 0.36);
+      this.joystick.active = true;
+      this.moveJoy(e);
+    };
+
+    const moveJoy = (e) => {
+      if (e.pointerId !== this.joystick.pointerId) return;
+      const dx = e.clientX - this.joystick.centerX;
+      const dy = e.clientY - this.joystick.centerY;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist < this.joystick.deadZone) {
+        Input.analogMove.x = 0;
+        Input.analogMove.y = 0;
+        Input.analogMove.active = false;
+        thumb.style.transform = 'translate(0px, 0px)';
+        Input.setVirtual('up', false);
+        Input.setVirtual('down', false);
+        Input.setVirtual('left', false);
+        Input.setVirtual('right', false);
+        return;
+      }
+
+      const clampedDist = Math.min(dist, this.joystick.maxDist);
+      const angle = Math.atan2(dy, dx);
+      const cx = Math.cos(angle) * clampedDist;
+      const cy = Math.sin(angle) * clampedDist;
+      thumb.style.transform = 'translate(' + Math.round(cx) + 'px, ' + Math.round(cy) + 'px)';
+
+      const normDist = clampedDist / this.joystick.maxDist;
+      const nx = Math.cos(angle) * normDist;
+      const ny = Math.sin(angle) * normDist;
+      Input.analogMove.x = nx;
+      Input.analogMove.y = ny;
+      Input.analogMove.active = true;
+
+      // Klasik yön tuşları uyumluluğu
+      Input.setVirtual('up', ny < -0.3);
+      Input.setVirtual('down', ny > 0.3);
+      Input.setVirtual('left', nx < -0.3);
+      Input.setVirtual('right', nx > 0.3);
+    };
+
+    const endJoy = (e) => {
+      if (e.pointerId !== this.joystick.pointerId) return;
+      this.resetJoystick();
+    };
+
+    this.moveJoy = moveJoy;
+    this.resetJoystick = () => {
+      if (this.joystick.pointerId !== null) {
+        try { zone.releasePointerCapture(this.joystick.pointerId); } catch (_) {}
+      }
+      this.joystick.pointerId = null;
+      this.joystick.active = false;
+      Input.analogMove.x = 0;
+      Input.analogMove.y = 0;
+      Input.analogMove.active = false;
+      thumb.style.transform = 'translate(0px, 0px)';
+      Input.setVirtual('up', false);
+      Input.setVirtual('down', false);
+      Input.setVirtual('left', false);
+      Input.setVirtual('right', false);
+    };
+
+    zone.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); startJoy(e); }, { passive: false });
+    zone.addEventListener('pointermove', (e) => { e.preventDefault(); e.stopPropagation(); moveJoy(e); }, { passive: false });
+    zone.addEventListener('pointerup', endJoy, { passive: false });
+    zone.addEventListener('pointercancel', endJoy, { passive: false });
+  }
+  /* ---------- Sağ Sanal Nişan & Ateş Joystick'i (Brawl Stars Stili) ---------- */
+  bindAimJoystick() {
+    const joy = this.dom.virtualAimJoystick;
+    const base = this.dom.aimJoystickBase;
+    const thumb = this.dom.aimJoystickThumb;
+    if (!joy || !base || !thumb) return;
+
+    const startAimJoy = (e) => {
+      if (this.aimJoystick.pointerId !== null) return;
+      this.aimJoystick.pointerId = e.pointerId;
+      this.aimJoystick.startX = e.clientX;
+      this.aimJoystick.startY = e.clientY;
+      this.aimJoystick.startTime = performance.now();
+      this.aimJoystick.dragged = false;
+      try { joy.setPointerCapture(e.pointerId); } catch (_) {}
+
+      const rect = base.getBoundingClientRect();
+      this.aimJoystick.centerX = rect.left + rect.width / 2;
+      this.aimJoystick.centerY = rect.top + rect.height / 2;
+      this.aimJoystick.maxDist = Math.max(34, rect.width * 0.36);
+      this.aimJoystick.active = true;
+      thumb.classList.add('pressed');
+      this.moveAimJoy(e);
+    };
+
+    const moveAimJoy = (e) => {
+      if (e.pointerId !== this.aimJoystick.pointerId) return;
+      const dx = e.clientX - this.aimJoystick.centerX;
+      const dy = e.clientY - this.aimJoystick.centerY;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist < this.aimJoystick.deadZone) {
+        thumb.style.transform = 'translate(0px, 0px)';
+        thumb.classList.remove('firing');
+        return;
+      }
+
+      this.aimJoystick.dragged = true;
+      const clampedDist = Math.min(dist, this.aimJoystick.maxDist);
+      const angle = Math.atan2(dy, dx);
+      const cx = Math.cos(angle) * clampedDist;
+      const cy = Math.sin(angle) * clampedDist;
+      thumb.style.transform = 'translate(' + Math.round(cx) + 'px, ' + Math.round(cy) + 'px)';
+      thumb.classList.add('firing');
+
+      // Karakter doğrudan çekilen yöne nişan alır!
+      if (this.game.player && !this.game.player.dead) {
+        this.game.player.angle = angle;
+      }
+      Input.touchAim.angle = angle;
+      Input.touchAim.active = true;
+
+      // Sürüklendiği sürece ateş et
+      Input.mouse.down = true;
+    };
+
+    const endAimJoy = (e) => {
+      if (e.pointerId !== this.aimJoystick.pointerId) return;
+
+      const duration = performance.now() - this.aimJoystick.startTime;
+      const totalMoved = Math.hypot(e.clientX - this.aimJoystick.startX, e.clientY - this.aimJoystick.startY);
+
+      // Brawl Stars Quick-Tap (Hızlı Dokunuşla Otomatik Hedefe Ateş)
+      if (!this.aimJoystick.dragged || (duration < 280 && totalMoved < 16)) {
+        this.quickAutoFire();
+      } else {
+        Input.mouse.down = false;
+      }
+
+      this.resetAimJoystick();
+    };
+
+    this.moveAimJoy = moveAimJoy;
+    this.resetAimJoystick = () => {
+      if (this.aimJoystick.pointerId !== null) {
+        try { joy.releasePointerCapture(this.aimJoystick.pointerId); } catch (_) {}
+      }
+      this.aimJoystick.pointerId = null;
+      this.aimJoystick.active = false;
+      this.aimJoystick.dragged = false;
+      thumb.style.transform = 'translate(0px, 0px)';
+      thumb.classList.remove('pressed', 'firing');
+      Input.mouse.down = false;
+    };
+
+    joy.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); startAimJoy(e); }, { passive: false });
+    joy.addEventListener('pointermove', (e) => { e.preventDefault(); e.stopPropagation(); moveAimJoy(e); }, { passive: false });
+    joy.addEventListener('pointerup', endAimJoy, { passive: false });
+    joy.addEventListener('pointercancel', endAimJoy, { passive: false });
+  }
+  quickAutoFire() {
+    const p = this.game.player;
+    if (!p || p.dead) return;
+    // En yakın canlı ve görüş hattı açık zombiyi bul
+    let bestZ = null, bestD = 550;
+    if (this.game.zombies && Array.isArray(this.game.zombies)) {
+      for (const z of this.game.zombies) {
+        if (!z || z.dead) continue;
+        const d = dist(z.x, z.y, p.x, p.y);
+        if (d < bestD) {
+          if (!this.game.map || this.game.map.lineOfSight(p.x, p.y, z.x, z.y)) {
+            bestD = d; bestZ = z;
+          }
+        }
+      }
+    }
+    if (bestZ) {
+      p.angle = Math.atan2(bestZ.y - p.y, bestZ.x - p.x);
+      Input.touchAim.angle = p.angle;
+      Input.touchAim.active = true;
+    }
+    // Hızlı tek el atış tetikle
+    Input.mouse.down = true;
+    if (navigator.vibrate) try { navigator.vibrate(12); } catch (_) {}
+    setTimeout(() => { Input.mouse.down = false; }, 80);
+  }
+  /* ---------- Aksiyon ve Yardımcı Butonlar ---------- */
+  bindActions() {
+    const triggerBtn = (btn, action, haptic = 8) => {
+      if (!btn) return;
+      const down = (e) => {
+        e.preventDefault(); e.stopPropagation();
+        btn.classList.add('pressed');
+        Input.triggerAction(action);
+        if (haptic && navigator.vibrate) try { navigator.vibrate(haptic); } catch (_) {}
+      };
+      const up = (e) => {
+        btn.classList.remove('pressed');
+      };
+      btn.addEventListener('pointerdown', down, { passive: false });
+      btn.addEventListener('pointerup', up, { passive: false });
+      btn.addEventListener('pointercancel', up, { passive: false });
+    };
+
+    // Koşma (Sprint)
+    const sprintBtn = this.dom.touchSprintBtn;
+    if (sprintBtn) {
+      let lastTap = 0;
+      sprintBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        const now = performance.now();
+        if (now - lastTap < 320) {
+          // Çift tıkla sürekli koşu kilidi
+          this.sprintLocked = !this.sprintLocked;
+          Input.setVirtual('sprint', this.sprintLocked);
+          sprintBtn.classList.toggle('active', this.sprintLocked);
+          if (this.game.ui) this.game.ui.msg(this.sprintLocked ? 'Sürekli koşu kilitlendi' : 'Koşu kilidi açık');
+        } else {
+          if (!this.sprintLocked) {
+            Input.setVirtual('sprint', true);
+            sprintBtn.classList.add('pressed', 'active');
+          }
+        }
+        lastTap = now;
+        if (navigator.vibrate) try { navigator.vibrate(8); } catch (_) {}
+      }, { passive: false });
+
+      const upSprint = () => {
+        if (!this.sprintLocked) {
+          Input.setVirtual('sprint', false);
+          sprintBtn.classList.remove('pressed', 'active');
+        }
+      };
+      sprintBtn.addEventListener('pointerup', upSprint, { passive: false });
+      sprintBtn.addEventListener('pointercancel', upSprint, { passive: false });
+    }
+
+    // Aksiyon butonları
+    triggerBtn(this.dom.touchReloadBtn, 'reload');
+    triggerBtn(this.dom.touchMeleeBtn, 'melee', 14);
+    triggerBtn(this.dom.touchInteractBtn, 'interact');
+    triggerBtn(this.dom.touchGrenadeBtn, 'throwExplosive', 16);
+    triggerBtn(this.dom.touchBarricadeBtn, 'barricade');
+    triggerBtn(this.dom.touchFlashlightBtn, 'flashlight');
+    triggerBtn(this.dom.touchHealBtn, 'quickHeal');
+    triggerBtn(this.dom.touchEnergyBtn, 'quickEnergy');
+
+    // Silah değiştirme döngüsü
+    const swapBtn = this.dom.touchSwapWeaponBtn;
+    if (swapBtn) {
+      swapBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        swapBtn.classList.add('pressed');
+        const p = this.game.player;
+        if (p && p.inv.weapons.length > 1) {
+          const next = (p.weaponIdx + 1) % p.inv.weapons.length;
+          p.swapWeapon(this.game, next);
+        } else {
+          Input.triggerAction('lastWeapon');
+        }
+        if (navigator.vibrate) try { navigator.vibrate(8); } catch (_) {}
+      }, { passive: false });
+      const upSwap = () => swapBtn.classList.remove('pressed');
+      swapBtn.addEventListener('pointerup', upSwap, { passive: false });
+      swapBtn.addEventListener('pointercancel', upSwap, { passive: false });
+    }
+
+    // Üst menü butonları
+    const bindNav = (btn, fn) => {
+      if (!btn) return;
+      btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        btn.classList.add('pressed');
+        Sound.unlock();
+        Sound.uiClick();
+        fn();
+      }, { passive: false });
+      const up = () => btn.classList.remove('pressed');
+      btn.addEventListener('pointerup', up, { passive: false });
+      btn.addEventListener('pointercancel', up, { passive: false });
+    };
+
+    bindNav(this.dom.touchPauseBtn, () => this.game.ui.togglePause());
+    bindNav(this.dom.touchInvBtn, () => this.game.ui.toggleInventory());
+    bindNav(this.dom.touchMapBtn, () => this.game.ui.toggleMap());
+    bindNav(this.dom.touchToggleBtn, () => this.toggleUserVisibility());
+
+    // Ekran içi etkileşim ipucu kutusuna dokunma
+    const hint = this.dom.interactHint;
+    if (hint) {
+      hint.addEventListener('pointerdown', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        this.game.tryInteract(Input.isDown('sprint'));
+        if (navigator.vibrate) try { navigator.vibrate(10); } catch (_) {}
+      }, { passive: false });
+    }
+
+    // Minimap'e dokununca büyük haritayı açma
+    const mini = this.dom.minimapBox;
+    if (mini) {
+      mini.addEventListener('pointerdown', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        this.game.ui.toggleMap();
+      }, { passive: false });
+    }
+  }
+  /* ---------- Canvas Serbest Dokunmatik Nişan (Touch-To-Aim) ---------- */
+  bindAimOnCanvas() {
+    const canvas = this.game.canvas;
+    if (!canvas) return;
+
+    const updateAim = (e) => {
+      const p = this.game.player;
+      if (!p) return;
+      const r = canvas.getBoundingClientRect();
+      const cx = (e.clientX - r.left) * (canvas.width / r.width) / (this.game.dpr || 1);
+      const cy = (e.clientY - r.top) * (canvas.height / r.height) / (this.game.dpr || 1);
+      Input.mouse.x = cx;
+      Input.mouse.y = cy;
+      const cam = this.game.camera;
+      const wx = cx / cam.zoom + cam.x;
+      const wy = cy / cam.zoom + cam.y;
+      Input.touchAim.x = wx;
+      Input.touchAim.y = wy;
+      Input.touchAim.angle = Math.atan2(wy - p.y, wx - p.x);
+      Input.touchAim.active = true;
+    };
+
+    canvas.addEventListener('pointerdown', (e) => {
+      // Eğer fare (mouse) sol tıklaması ise masaüstü sistemi devreye girsin
+      if (e.pointerType === 'mouse') return;
+      if (this.aimPointerId !== null) return;
+      // Dokunma sol alttaki joystick veya sağ alttaki buton bölgesine denk geldiyse nişan almasın
+      const w = window.innerWidth, h = window.innerHeight;
+      const isJoyArea = e.clientX < 220 && e.clientY > h - 230;
+      const isActionArea = e.clientX > w - 240 && e.clientY > h - 240;
+      if (isJoyArea || isActionArea) return;
+
+      this.aimPointerId = e.pointerId;
+      updateAim(e);
+    }, { passive: true });
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (e.pointerId === this.aimPointerId) updateAim(e);
+    }, { passive: true });
+
+    const endAim = (e) => {
+      if (e.pointerId === this.aimPointerId) this.aimPointerId = null;
+    };
+    canvas.addEventListener('pointerup', endAim, { passive: true });
+    canvas.addEventListener('pointercancel', endAim, { passive: true });
+  }
+  /* ---------- Pencere Olayları ve Temizlik ---------- */
+  bindWindowEvents() {
+    window.addEventListener('blur', () => this.reset());
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.reset(); });
+    window.addEventListener('resize', () => this.updateVisibility());
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => this.updateVisibility(), 150);
+    });
+  }
+  reset() {
+    if (this.resetJoystick) this.resetJoystick();
+    if (this.resetAimJoystick) this.resetAimJoystick();
+    this.aimPointerId = null;
+    Input.mouse.down = false;
+    Input.touchAim.active = false;
+    Input.resetVirtual();
+    if (!this.sprintLocked && this.dom.touchSprintBtn) {
+      this.dom.touchSprintBtn.classList.remove('pressed', 'active');
+    }
+  }
+  /* ---------- Dinamik Durum Güncellemeleri ---------- */
+  update(dt) {
+    if (!this.dom.touchControls || this.dom.touchControls.classList.contains('hidden')) return;
+    this._pulseTimer += dt;
+    if (this._pulseTimer < 0.12) return;
+    this._pulseTimer = 0;
+
+    const p = this.game.player;
+    if (!p) return;
+
+    // Fener durumu
+    if (this.dom.touchFlashlightBtn) {
+      this.dom.touchFlashlightBtn.classList.toggle('on', !!p.flashlight && p.battery > 0);
+    }
+    // Can durumu (< %35 ise uyar)
+    if (this.dom.touchHealBtn) {
+      this.dom.touchHealBtn.classList.toggle('urgent', p.hp / p.maxHp < 0.35);
+    }
+    // Enerji durumu
+    if (this.dom.touchEnergyBtn) {
+      this.dom.touchEnergyBtn.classList.toggle('urgent', p.stamina / p.maxStam < 0.25);
+    }
+    // Etkileşim hazır mı?
+    if (this.dom.touchInteractBtn) {
+      this.dom.touchInteractBtn.classList.toggle('ready', !!this.game.exitPrompt);
+    }
+    // Barikat kurulabilir mi?
+    if (this.dom.touchBarricadeBtn) {
+      this.dom.touchBarricadeBtn.classList.toggle('ready', this.game.exitPrompt?.kind === 'door');
+    }
+    // Şarjör boş mu?
+    if (this.dom.touchReloadBtn) {
+      const w = p.weapon;
+      this.dom.touchReloadBtn.classList.toggle('empty', !!(w && w.ammo === 0 && WEAPONS[w.id]?.cls !== 'melee'));
     }
   }
 }
